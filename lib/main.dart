@@ -9,10 +9,31 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MaterialApp(home: Scaffold(body: Task()));
+  }
+}
+
+class Task extends StatefulWidget {
+  const Task({super.key});
+
+  @override
+  State<Task> createState() => _TaskState();
+}
+
+class _TaskState extends State<Task> {
+  @override
+  Widget build(BuildContext context) {
+    final sch = MediaQuery.sizeOf(context).height;
+    final scw = MediaQuery.sizeOf(context).width;
+
+    return Center(
+      child: Container(
+        width: scw * 0.71,
+        height: sch * 0.06,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: BoxBorder.all(color: Colors.black, width: 1),
+          color: Color.fromRGBO(240, 240, 240, 1),
         ),
       ),
     );
