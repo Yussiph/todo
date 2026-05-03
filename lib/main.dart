@@ -24,7 +24,7 @@ class _MainAppState extends State<MainApp> {
         //   ),
         // ),
         body: Center(
-          child: Container(
+          child: SizedBox(
             width: MediaQuery.sizeOf(context).width * 0.8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -98,14 +98,15 @@ class _TaskState extends State<Task> {
 class AddTask extends StatelessWidget {
   AddTask({super.key});
 
-  TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
     final scw = MediaQuery.sizeOf(context).width;
+
     return Container(
-      height: sch * 0.05,
+      constraints: BoxConstraints(minHeight: sch * 0.05),
       width: scw * 0.8,
       // decoration: BoxDecoration(color: Colors.red),
       child: Row(
@@ -115,20 +116,27 @@ class AddTask extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: LightMode.secondary,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: TextField(
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: null,
                 controller: _textEditingController,
                 decoration: InputDecoration(
-                  hintText: "Put your task here",
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  hintText: "New task",
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   border: InputBorder.none,
                 ),
               ),
             ),
           ),
+
           Container(
-            margin: EdgeInsets.only(left: 5),
+            margin: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
               color: LightMode.accent1,
               shape: BoxShape.circle,
@@ -137,7 +145,7 @@ class AddTask extends StatelessWidget {
               onPressed: () {
                 print(_textEditingController.text);
                 _textEditingController.clear();
-                },
+              },
               icon: Icon(Icons.add),
               color: LightMode.background,
               style: ButtonStyle(),
@@ -150,7 +158,7 @@ class AddTask extends StatelessWidget {
 }
 
 class Completion extends StatefulWidget {
-  Completion({super.key});
+  const Completion({super.key});
 
   @override
   State<Completion> createState() => _CompletionState();
