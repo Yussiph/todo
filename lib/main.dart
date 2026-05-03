@@ -26,14 +26,19 @@ class _TaskState extends State<Task> {
     final sch = MediaQuery.sizeOf(context).height;
     final scw = MediaQuery.sizeOf(context).width;
 
-    return Center(
-      child: Container(
-        width: scw * 0.71,
-        height: sch * 0.06,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: BoxBorder.all(color: Colors.black, width: 1),
-          color: Color.fromRGBO(240, 240, 240, 1),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(onPressed: () => print("hello world"), icon: Icon(Icons.sunny),),
+      ),
+      body: Center(
+        child: Container(
+          width: scw * 0.71,
+          height: sch * 0.06,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            border: BoxBorder.all(color: Colors.black, width: 1),
+            color: Color.fromRGBO(240, 240, 240, 1),
+          ),
         ),
       ),
     );
