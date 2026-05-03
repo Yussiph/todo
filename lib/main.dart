@@ -98,6 +98,8 @@ class _TaskState extends State<Task> {
 class AddTask extends StatelessWidget {
   AddTask({super.key});
 
+  TextEditingController _textEditingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
@@ -109,31 +111,38 @@ class AddTask extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-           flex: 8,
+            flex: 8,
             child: Container(
               decoration: BoxDecoration(
                 color: LightMode.secondary,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: TextField(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: "Put your task here",
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
                   border: InputBorder.none,
                 ),
-                onChanged: (text) {
-                  print(text);
-                },
               ),
             ),
           ),
           Container(
+            margin: EdgeInsets.only(left: 5),
             decoration: BoxDecoration(
               color: LightMode.accent1,
               shape: BoxShape.circle,
             ),
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.add), color: LightMode.background, style: ButtonStyle(),),
+            child: IconButton(
+              onPressed: () {
+                print(_textEditingController.text);
+                _textEditingController.clear();
+                },
+              icon: Icon(Icons.add),
+              color: LightMode.background,
+              style: ButtonStyle(),
+            ),
           ),
-
         ],
       ),
     );
