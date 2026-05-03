@@ -17,17 +17,24 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => print("hello world"),
-            icon: Icon(Icons.sunny),
-          ),
-        ),
+        // appbar: appbar(
+        //   leading: iconbutton(
+        //     onpressed: () => print("hello world"),
+        //     icon: icon(icons.sunny),
+        //   ),
+        // ),
         body: Center(
           child: Container(
             width: MediaQuery.sizeOf(context).width * 0.8,
             child: Column(
-              children: [Completion(), SizedBox(height: 30), Task()],
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Completion(),
+                SizedBox(height: 30),
+                AddTask(),
+                SizedBox(height: 30),
+                Task(),
+              ],
             ),
           ),
         ),
@@ -88,6 +95,51 @@ class _TaskState extends State<Task> {
   }
 }
 
+class AddTask extends StatelessWidget {
+  AddTask({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final sch = MediaQuery.sizeOf(context).height;
+    final scw = MediaQuery.sizeOf(context).width;
+    return Container(
+      height: sch * 0.05,
+      width: scw * 0.8,
+      // decoration: BoxDecoration(color: Colors.red),
+      child: Row(
+        children: [
+          Expanded(
+           flex: 8,
+            child: Container(
+              decoration: BoxDecoration(
+                color: LightMode.secondary,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "Put your task here",
+                  border: InputBorder.none,
+                ),
+                onChanged: (text) {
+                  print(text);
+                },
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: LightMode.accent1,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(onPressed: () {}, icon: Icon(Icons.add), color: LightMode.background, style: ButtonStyle(),),
+          ),
+
+        ],
+      ),
+    );
+  }
+}
+
 class Completion extends StatefulWidget {
   Completion({super.key});
 
@@ -118,7 +170,16 @@ class _CompletionState extends State<Completion> {
               color: LightMode.accent1,
               shape: BoxShape.circle,
             ),
-            child: Center(child: Text("1/3", style: TextStyle(color: Colors.white),),),
+            child: Center(
+              child: Text(
+                "1/3",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
           ),
         ],
       ),
