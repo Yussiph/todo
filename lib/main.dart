@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:todo/Themes.dart';
 
-void main() {
+import 'package:todo/collections/Task.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:isar_community/isar.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Other directory options are available, see the path_provider
+  // page and decide which one is suitable for yourself.
+  final dir = await getApplicationSupportDirectory();
+  final isar = await Isar.open(
+    [TaskSchema], directory: dir.path,
+  );
   runApp(const MainApp());
 }
 
@@ -16,6 +27,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         // appbar: appbar(
         //   leading: iconbutton(

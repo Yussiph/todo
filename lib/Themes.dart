@@ -10,7 +10,7 @@ class DarkMode {
 
 class LightMode {
   static final Color background = Color.fromRGBO(242, 242, 242, 1);
-  static final Color secondary = Color.fromRGBO(225, 225, 225, 1);
+  static final Color secondary = Color.fromRGBO(230, 230, 230, 1);
   static final Color accent1 = Color.fromRGBO(207, 39, 0, 1);
   static final Color accent2 = Color.fromRGBO(156, 140, 114, 1);
 }
