@@ -30,7 +30,21 @@ const TaskSchema = CollectionSchema(
   deserialize: _taskDeserialize,
   deserializeProp: _taskDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'todo': IndexSchema(
+      id: 5157112598935263993,
+      name: r'todo',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'todo',
+          type: IndexType.value,
+          caseSensitive: false,
+        ),
+      ],
+    ),
+  },
   links: {},
   embeddedSchemas: {},
 
@@ -112,6 +126,14 @@ extension TaskQueryWhereSort on QueryBuilder<Task, Task, QWhere> {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<Task, Task, QAfterWhere> anyTodo() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'todo'),
+      );
+    });
+  }
 }
 
 extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
@@ -180,6 +202,172 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
           includeUpper: includeUpper,
         ),
       );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'todo', value: [null]),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'todo',
+          lower: [null],
+          includeLower: false,
+          upper: [],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoEqualTo(String? todo) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'todo', value: [todo]),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoNotEqualTo(String? todo) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'todo',
+                lower: [],
+                upper: [todo],
+                includeUpper: false,
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'todo',
+                lower: [todo],
+                includeLower: false,
+                upper: [],
+              ),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'todo',
+                lower: [todo],
+                includeLower: false,
+                upper: [],
+              ),
+            )
+            .addWhereClause(
+              IndexWhereClause.between(
+                indexName: r'todo',
+                lower: [],
+                upper: [todo],
+                includeUpper: false,
+              ),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoGreaterThan(
+    String? todo, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'todo',
+          lower: [todo],
+          includeLower: include,
+          upper: [],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoLessThan(
+    String? todo, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'todo',
+          lower: [],
+          upper: [todo],
+          includeUpper: include,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoBetween(
+    String? lowerTodo,
+    String? upperTodo, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'todo',
+          lower: [lowerTodo],
+          includeLower: includeLower,
+          upper: [upperTodo],
+          includeUpper: includeUpper,
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoStartsWith(
+    String TodoPrefix,
+  ) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.between(
+          indexName: r'todo',
+          lower: [TodoPrefix],
+          upper: ['$TodoPrefix\u{FFFFF}'],
+        ),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IndexWhereClause.equalTo(indexName: r'todo', value: ['']),
+      );
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterWhereClause> todoIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IndexWhereClause.lessThan(indexName: r'todo', upper: ['']),
+            )
+            .addWhereClause(
+              IndexWhereClause.greaterThan(indexName: r'todo', lower: ['']),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IndexWhereClause.greaterThan(indexName: r'todo', lower: ['']),
+            )
+            .addWhereClause(
+              IndexWhereClause.lessThan(indexName: r'todo', upper: ['']),
+            );
+      }
     });
   }
 }

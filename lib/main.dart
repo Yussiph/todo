@@ -4,15 +4,11 @@ import 'package:todo/Themes.dart';
 import 'package:todo/collections/Task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:isar_community/isar.dart';
+import 'package:todo/services/isar_setup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Other directory options are available, see the path_provider
-  // page and decide which one is suitable for yourself.
-  final dir = await getApplicationSupportDirectory();
-  final isar = await Isar.open(
-    [TaskSchema], directory: dir.path,
-  );
+  await initIsar();
   runApp(const MainApp());
 }
 
