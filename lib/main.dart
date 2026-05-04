@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/Themes.dart';
 
 import 'package:todo/collections/Task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:isar_community/isar.dart';
+
 import 'package:todo/services/isar_setup.dart';
+import 'package:todo/repositories/task_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initIsar();
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(create: (context) => TaskProvider(isar),
+    child: const MainApp(),
+  )
+  );
 }
 
 class MainApp extends StatefulWidget {
@@ -172,7 +179,8 @@ class Completion extends StatefulWidget {
   State<Completion> createState() => _CompletionState();
 }
 
-class _CompletionState extends State<Completion> {
+class _CompletionState extends State<Completion>{
+
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
