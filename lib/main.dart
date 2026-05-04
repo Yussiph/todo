@@ -48,7 +48,7 @@ class _MainAppState extends State<MainApp> {
                 SizedBox(height: 30),
                 AddTask(),
                 SizedBox(height: 30),
-                Task(),
+                TodoItem(),
               ],
             ),
           ),
@@ -58,14 +58,9 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-class Task extends StatefulWidget {
-  const Task({super.key});
+class TodoItem extends StatelessWidget{
+  TodoItem({super.key});
 
-  @override
-  State<Task> createState() => _TaskState();
-}
-
-class _TaskState extends State<Task> {
   bool? _toggle = false;
   @override
   Widget build(BuildContext context) {
@@ -88,11 +83,7 @@ class _TaskState extends State<Task> {
                 Checkbox(
                   checkColor: Colors.green,
                   value: _toggle,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _toggle = value;
-                    });
-                  },
+                  onChanged: (bool? value) { },
                 ),
                 Text("data"),
               ],
@@ -158,7 +149,10 @@ class AddTask extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () {
-                print(_textEditingController.text);
+                final newTask = Task()
+                  ..todo = _textEditingController.text.trim()
+                  ..isChecked = false;
+                context.read<TaskProvider>().addAndUpdateTask(newTask);
                 _textEditingController.clear();
               },
               icon: Icon(Icons.add),
