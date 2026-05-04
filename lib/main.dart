@@ -172,19 +172,17 @@ class AddTask extends StatelessWidget {
   }
 }
 
-class Completion extends StatefulWidget {
+class Completion extends StatelessWidget {
+
   const Completion({super.key});
-
-  @override
-  State<Completion> createState() => _CompletionState();
-}
-
-class _CompletionState extends State<Completion>{
 
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
     final scw = MediaQuery.sizeOf(context).width;
+    final taskProvider = context.watch<TaskProvider>();
+    final count = taskProvider.count;
+    final completedCount = taskProvider.completedCount;
 
     return Container(
       height: sch * 0.2,
@@ -205,7 +203,7 @@ class _CompletionState extends State<Completion>{
             ),
             child: Center(
               child: Text(
-                "1/3",
+                "$completedCount/$count",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 40,

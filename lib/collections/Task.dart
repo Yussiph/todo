@@ -12,5 +12,5 @@ class Task {
   @Index(type: IndexType.value, caseSensitive: false)
   String? todo;
 
-  bool? isChecked;
+  late bool isChecked;
 }

@@ -87,7 +87,7 @@ Task _taskDeserialize(
 ) {
   final object = Task();
   object.id = id;
-  object.isChecked = reader.readBoolOrNull(offsets[0]);
+  object.isChecked = reader.readBool(offsets[0]);
   object.todo = reader.readStringOrNull(offsets[1]);
   return object;
 }
@@ -100,7 +100,7 @@ P _taskDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     default:
@@ -430,25 +430,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> isCheckedIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'isChecked'),
-      );
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> isCheckedIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'isChecked'),
-      );
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> isCheckedEqualTo(
-    bool? value,
-  ) {
+  QueryBuilder<Task, Task, QAfterFilterCondition> isCheckedEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(
         FilterCondition.equalTo(property: r'isChecked', value: value),
@@ -710,7 +692,7 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Task, bool?, QQueryOperations> isCheckedProperty() {
+  QueryBuilder<Task, bool, QQueryOperations> isCheckedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isChecked');
     });

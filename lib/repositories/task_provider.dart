@@ -8,6 +8,8 @@ import 'package:todo/services/isar_setup.dart';
 class TaskProvider extends ChangeNotifier {
 
   List<Task> taskList = [];
+  int get count => taskList.length;
+  int get completedCount => taskList.where( (task) => task.isChecked ).length;
 
   TaskProvider(isar) {
     fetchAllTasks();
@@ -33,12 +35,6 @@ class TaskProvider extends ChangeNotifier {
     await fetchAllTasks();
   }
 
-  Future<int> getTaskCount() async {
-    return await isar.tasks.count();
-  }
 
-  Future<int> getCompletedTasksCount() async {
-    return await isar.tasks.where().isCheckedProperty().count();
-  }
 
 }
