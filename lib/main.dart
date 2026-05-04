@@ -149,11 +149,17 @@ class AddTask extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () {
-                final newTask = Task()
-                  ..todo = _textEditingController.text.trim()
-                  ..isChecked = false;
-                context.read<TaskProvider>().addAndUpdateTask(newTask);
-                _textEditingController.clear();
+                if (_textEditingController.text
+                    .trim()
+                    .isNotEmpty) {
+                  final newTask = Task()
+                    ..todo = _textEditingController.text.trim()
+                    ..isChecked = false;
+                  context.read<TaskProvider>().addAndUpdateTask(newTask);
+                  _textEditingController.clear();
+                }else {
+                  print("Nice try Amigo.");
+                }
               },
               icon: Icon(Icons.add),
               color: LightMode.background,
@@ -208,6 +214,24 @@ class Completion extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TodosList extends StatelessWidget{
+  TodosList({super.key});
+
+  @override
+  Widget build(BuildContext context){
+
+    final taskProvider = context.watch<TaskProvider>();
+    final todos = taskProvider.taskList;
+
+    return ListView.builder(
+     itemCount: todos.length,
+      itemBuilder: (context, index){
+       
+      },
     );
   }
 }
