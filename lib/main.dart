@@ -13,9 +13,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initIsar();
   runApp(
-    ChangeNotifierProvider(create: (context) => TaskProvider(isar),
-    child: const MainApp(),
-  )
+    ChangeNotifierProvider(
+      create: (context) => TaskProvider(isar),
+      child: const MainApp(),
+    ),
   );
 }
 
@@ -58,7 +59,7 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-class TodoItem extends StatelessWidget{
+class TodoItem extends StatelessWidget {
   TodoItem({super.key});
 
   bool? _toggle = false;
@@ -83,7 +84,7 @@ class TodoItem extends StatelessWidget{
                 Checkbox(
                   checkColor: Colors.green,
                   value: _toggle,
-                  onChanged: (bool? value) { },
+                  onChanged: (bool? value) {},
                 ),
                 Text("data"),
               ],
@@ -149,15 +150,13 @@ class AddTask extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: () {
-                if (_textEditingController.text
-                    .trim()
-                    .isNotEmpty) {
+                if (_textEditingController.text.trim().isNotEmpty) {
                   final newTask = Task()
                     ..todo = _textEditingController.text.trim()
                     ..isChecked = false;
                   context.read<TaskProvider>().addAndUpdateTask(newTask);
                   _textEditingController.clear();
-                }else {
+                } else {
                   print("Nice try Amigo.");
                 }
               },
@@ -173,7 +172,6 @@ class AddTask extends StatelessWidget {
 }
 
 class Completion extends StatelessWidget {
-
   const Completion({super.key});
 
   @override
@@ -181,6 +179,7 @@ class Completion extends StatelessWidget {
     final sch = MediaQuery.sizeOf(context).height;
     final scw = MediaQuery.sizeOf(context).width;
     final taskProvider = context.watch<TaskProvider>();
+    print("This is the something that needs to be rebuilt: ${taskProvider.count}");
     final count = taskProvider.count;
     final completedCount = taskProvider.completedCount;
 
@@ -203,7 +202,7 @@ class Completion extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                "$completedCount/$count",
+                "$completedCount/${taskProvider.count}",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 40,
@@ -218,20 +217,17 @@ class Completion extends StatelessWidget {
   }
 }
 
-class TodosList extends StatelessWidget{
+class TodosList extends StatelessWidget {
   TodosList({super.key});
 
   @override
-  Widget build(BuildContext context){
-
+  Widget build(BuildContext context) {
     final taskProvider = context.watch<TaskProvider>();
     final todos = taskProvider.taskList;
 
     return ListView.builder(
-     itemCount: todos.length,
-      itemBuilder: (context, index){
-       
-      },
+      itemCount: todos.length,
+      itemBuilder: (context, index) {},
     );
   }
 }

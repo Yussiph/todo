@@ -1,5 +1,6 @@
 import 'package:isar_community/isar.dart';
 
+
 part 'Task.g.dart';
 
 @collection
