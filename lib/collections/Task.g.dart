@@ -60,12 +60,7 @@ int _taskEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.todo;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.todo.length * 3;
   return bytesCount;
 }
 
@@ -88,7 +83,7 @@ Task _taskDeserialize(
   final object = Task();
   object.id = id;
   object.isChecked = reader.readBool(offsets[0]);
-  object.todo = reader.readStringOrNull(offsets[1]);
+  object.todo = reader.readString(offsets[1]);
   return object;
 }
 
@@ -102,7 +97,7 @@ P _taskDeserializeProp<P>(
     case 0:
       return (reader.readBool(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -205,28 +200,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> todoIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.equalTo(indexName: r'todo', value: [null]),
-      );
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> todoIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
-        IndexWhereClause.between(
-          indexName: r'todo',
-          lower: [null],
-          includeLower: false,
-          upper: [],
-        ),
-      );
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterWhereClause> todoEqualTo(String? todo) {
+  QueryBuilder<Task, Task, QAfterWhereClause> todoEqualTo(String todo) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         IndexWhereClause.equalTo(indexName: r'todo', value: [todo]),
@@ -234,7 +208,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterWhereClause> todoNotEqualTo(String? todo) {
+  QueryBuilder<Task, Task, QAfterWhereClause> todoNotEqualTo(String todo) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -277,7 +251,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
   }
 
   QueryBuilder<Task, Task, QAfterWhereClause> todoGreaterThan(
-    String? todo, {
+    String todo, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -293,7 +267,7 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
   }
 
   QueryBuilder<Task, Task, QAfterWhereClause> todoLessThan(
-    String? todo, {
+    String todo, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -309,8 +283,8 @@ extension TaskQueryWhere on QueryBuilder<Task, Task, QWhereClause> {
   }
 
   QueryBuilder<Task, Task, QAfterWhereClause> todoBetween(
-    String? lowerTodo,
-    String? upperTodo, {
+    String lowerTodo,
+    String upperTodo, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -438,24 +412,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> todoIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNull(property: r'todo'),
-      );
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> todoIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(
-        const FilterCondition.isNotNull(property: r'todo'),
-      );
-    });
-  }
-
   QueryBuilder<Task, Task, QAfterFilterCondition> todoEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -470,7 +428,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> todoGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -487,7 +445,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> todoLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -504,8 +462,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> todoBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -698,7 +656,7 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Task, String?, QQueryOperations> todoProperty() {
+  QueryBuilder<Task, String, QQueryOperations> todoProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'todo');
     });

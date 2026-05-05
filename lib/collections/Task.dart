@@ -11,7 +11,7 @@ class Task {
   // This will be useful when searching later since Isar is case sensitive.
   // That is if I added search :)
   @Index(type: IndexType.value, caseSensitive: false)
-  String? todo;
+  late String todo;
 
   // not checked by default.
   bool isChecked = false;

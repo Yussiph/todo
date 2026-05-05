@@ -39,18 +39,23 @@ class _MainAppState extends State<MainApp> {
         //     icon: icon(icons.sunny),
         //   ),
         // ),
-        body: Center(
-          child: SizedBox(
-            width: MediaQuery.sizeOf(context).width * 0.8,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Completion(),
-                SizedBox(height: 30),
-                AddTask(),
-                SizedBox(height: 30),
-                TodoItem(),
-              ],
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 50),
+            child: Center(
+              child: SizedBox(
+                width: MediaQuery.sizeOf(context).width * 0.8,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Completion(),
+                    SizedBox(height: 30),
+                    AddTask(),
+                    SizedBox(height: 30),
+                    Expanded(child: TodosList()),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -59,44 +64,49 @@ class _MainAppState extends State<MainApp> {
   }
 }
 
-class TodoItem extends StatelessWidget {
-  TodoItem({super.key});
+class Completion extends StatelessWidget {
+  const Completion({super.key});
 
-  bool? _toggle = false;
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
     final scw = MediaQuery.sizeOf(context).width;
+    final taskProvider = context.watch<TaskProvider>();
+    print(
+      "This is the something that needs to be rebuilt: ${taskProvider.count}",
+    );
+    final count = taskProvider.count;
+    final completedCount = taskProvider.completedCount;
 
-    return Center(
-      child: Container(
-        height: sch * 0.07,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: BoxBorder.all(color: LightMode.accent2, width: 1),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Checkbox(
-                  checkColor: Colors.green,
-                  value: _toggle,
-                  onChanged: (bool? value) {},
+    return Container(
+      height: sch * 0.2,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black, width: 1),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text("Todo's Done"),
+          Container(
+            width: 0.14 * sch,
+            height: 0.14 * sch,
+            decoration: BoxDecoration(
+              color: LightMode.accent1,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                "$completedCount/${taskProvider.count}",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.w700,
                 ),
-                Text("data"),
-              ],
+              ),
             ),
-            Row(
-              children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -171,47 +181,53 @@ class AddTask extends StatelessWidget {
   }
 }
 
-class Completion extends StatelessWidget {
-  const Completion({super.key});
+class TodoItem extends StatelessWidget {
+  final Task task;
+  TodoItem({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
     final scw = MediaQuery.sizeOf(context).width;
-    final taskProvider = context.watch<TaskProvider>();
-    print("This is the something that needs to be rebuilt: ${taskProvider.count}");
-    final count = taskProvider.count;
-    final completedCount = taskProvider.completedCount;
 
-    return Container(
-      height: sch * 0.2,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 1),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text("Todo's Done"),
-          Container(
-            width: 0.14 * sch,
-            height: 0.14 * sch,
-            decoration: BoxDecoration(
-              color: LightMode.accent1,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                "$completedCount/${taskProvider.count}",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        height: sch * 0.07,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: BoxBorder.all(color: LightMode.accent2, width: 1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Checkbox(
+                  checkColor: Colors.green,
+                  value: task.isChecked,
+                  onChanged: (bool? value) {
+                    task.isChecked = value ?? false;
+                    context.read<TaskProvider>().addAndUpdateTask(task);
+                  },
                 ),
-              ),
+                Text(task.todo),
+              ],
             ),
-          ),
-        ],
+            Row(
+              children: [
+                IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                IconButton(
+                  onPressed: () {
+                    context.read<TaskProvider>().deleteTask(task);
+                  },
+                  icon: Icon(Icons.delete),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -227,7 +243,9 @@ class TodosList extends StatelessWidget {
 
     return ListView.builder(
       itemCount: todos.length,
-      itemBuilder: (context, index) {},
+      itemBuilder: (context, index) {
+        return TodoItem(task: todos[index]);
+      },
     );
   }
 }
