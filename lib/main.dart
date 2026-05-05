@@ -46,7 +46,8 @@ class _MainAppState extends State<MainApp> {
               child: SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.8,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  // I don't think this is needed.
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Completion(),
                     SizedBox(height: 30),
@@ -193,7 +194,9 @@ class TodoItem extends StatelessWidget {
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),
-        height: sch * 0.07,
+        constraints: BoxConstraints(
+          minHeight: sch * 0.07,
+        ),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -202,22 +205,27 @@ class TodoItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Checkbox(
-                  checkColor: Colors.green,
-                  value: task.isChecked,
-                  onChanged: (bool? value) {
-                    task.isChecked = value ?? false;
-                    context.read<TaskProvider>().addAndUpdateTask(task);
-                  },
-                ),
-                Text(task.todo),
-              ],
+            Expanded(
+              child: Row(
+                children: [
+                  Checkbox(
+                    checkColor: Colors.green,
+                    value: task.isChecked,
+                    onChanged: (bool? value) {
+                      task.isChecked = value ?? false;
+                      context.read<TaskProvider>().addAndUpdateTask(task);
+                    },
+                  ),
+                  Expanded(child: Text(task.todo, softWrap: true,),),
+                ],
+              ),
             ),
             Row(
               children: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                IconButton(onPressed: () {
+                  task.todo = "Updated";
+                  context.read<TaskProvider>().addAndUpdateTask(task);
+                }, icon: Icon(Icons.edit)),
                 IconButton(
                   onPressed: () {
                     context.read<TaskProvider>().deleteTask(task);
