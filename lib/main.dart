@@ -118,6 +118,18 @@ class AddTask extends StatelessWidget {
 
   final TextEditingController _textEditingController = TextEditingController();
 
+  submit(TextEditingController todo, BuildContext context){
+    if (todo.text.trim().isNotEmpty) {
+      final newTask = Task()
+        ..todo = todo.text.trim()
+        ..isChecked = false;
+      context.read<TaskProvider>().addAndUpdateTask(newTask);
+      todo.clear();
+    } else {
+      print("Nice try Amigo.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final sch = MediaQuery.sizeOf(context).height;
@@ -137,9 +149,10 @@ class AddTask extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
               ),
               child: TextField(
-                keyboardType: TextInputType.multiline,
+                // to make enter submits.
                 minLines: 1,
                 maxLines: null,
+                keyboardType: TextInputType.text,
                 controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: "New task",
@@ -149,6 +162,7 @@ class AddTask extends StatelessWidget {
                   ),
                   border: InputBorder.none,
                 ),
+                onSubmitted: (_) => submit(_textEditingController, context),
               ),
             ),
           ),
@@ -160,17 +174,7 @@ class AddTask extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              onPressed: () {
-                if (_textEditingController.text.trim().isNotEmpty) {
-                  final newTask = Task()
-                    ..todo = _textEditingController.text.trim()
-                    ..isChecked = false;
-                  context.read<TaskProvider>().addAndUpdateTask(newTask);
-                  _textEditingController.clear();
-                } else {
-                  print("Nice try Amigo.");
-                }
-              },
+              onPressed: () => submit(_textEditingController, context),
               icon: Icon(Icons.add),
               color: LightMode.background,
               style: ButtonStyle(),
