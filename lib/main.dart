@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/Themes.dart';
 
@@ -33,6 +34,9 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
+      ),
       debugShowCheckedModeBanner: false,
       builder: FToastBuilder(),
       home: Scaffold(
@@ -100,12 +104,16 @@ class Completion extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: Text(
-                "$completedCount/${taskProvider.count}",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 40,
-                  fontWeight: FontWeight.w700,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 200),
+                child: Text(
+                  "$completedCount/${taskProvider.count}",
+                  key: UniqueKey(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
@@ -142,18 +150,18 @@ class _AddTaskState extends State<AddTask> {
       context.read<TaskProvider>().addAndUpdateTask(newTask);
       todo.clear();
     } else {
-        fToast.showToast(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-            decoration: BoxDecoration(
-              color: LightMode.accent1,
-              borderRadius: BorderRadius.circular(25)
-            ),
-            child: Text("Empty", style: TextStyle(color: Colors.white),),
+      fToast.showToast(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+          decoration: BoxDecoration(
+            color: LightMode.accent1,
+            borderRadius: BorderRadius.circular(25),
           ),
-          gravity: ToastGravity.BOTTOM,
-          toastDuration: Duration(milliseconds: 1500),
-        );
+          child: Text("Empty", style: TextStyle(color: Colors.white)),
+        ),
+        gravity: ToastGravity.BOTTOM,
+        toastDuration: Duration(milliseconds: 1500),
+      );
     }
   }
 
@@ -181,9 +189,7 @@ class _AddTaskState extends State<AddTask> {
                 maxLines: null,
                 keyboardType: TextInputType.text,
                 controller: _textEditingController,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(100),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(100)],
                 cursorColor: LightMode.accent1,
                 cursorWidth: 3,
                 decoration: InputDecoration(
@@ -207,7 +213,7 @@ class _AddTaskState extends State<AddTask> {
             ),
             child: IconButton(
               onPressed: () => submit(_textEditingController, context),
-              icon: Icon(Icons.add_rounded, size: 28,),
+              icon: Icon(Icons.add_rounded, size: 28),
               color: LightMode.background,
               style: ButtonStyle(),
             ),
@@ -250,7 +256,20 @@ class TodoItem extends StatelessWidget {
                       context.read<TaskProvider>().addAndUpdateTask(task);
                     },
                   ),
-                  Expanded(child: Text(task.todo, softWrap: true)),
+                  Expanded(
+                    child: AnimatedDefaultTextStyle(
+                      style: TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        decoration: task.isChecked
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
+                      duration: Duration(milliseconds: 200),
+                      child: Text(task.todo),
+                    ),
+                  ),
                 ],
               ),
             ),
