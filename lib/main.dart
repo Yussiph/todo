@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/Themes.dart';
@@ -143,15 +144,15 @@ class _AddTaskState extends State<AddTask> {
     } else {
         fToast.showToast(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
             decoration: BoxDecoration(
               color: LightMode.accent1,
               borderRadius: BorderRadius.circular(25)
             ),
-            child: Text("Empty or more than 100 characters", style: TextStyle(color: Colors.white),),
+            child: Text("Empty", style: TextStyle(color: Colors.white),),
           ),
           gravity: ToastGravity.BOTTOM,
-          toastDuration: Duration(seconds: 3),
+          toastDuration: Duration(milliseconds: 1500),
         );
     }
   }
@@ -180,6 +181,11 @@ class _AddTaskState extends State<AddTask> {
                 maxLines: null,
                 keyboardType: TextInputType.text,
                 controller: _textEditingController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(100),
+                ],
+                cursorColor: LightMode.accent1,
+                cursorWidth: 3,
                 decoration: InputDecoration(
                   hintText: "New task",
                   contentPadding: EdgeInsets.symmetric(
@@ -201,7 +207,7 @@ class _AddTaskState extends State<AddTask> {
             ),
             child: IconButton(
               onPressed: () => submit(_textEditingController, context),
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.add_rounded, size: 28,),
               color: LightMode.background,
               style: ButtonStyle(),
             ),
