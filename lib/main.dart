@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/Themes.dart';
 
@@ -32,6 +33,7 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      builder: FToastBuilder(),
       home: Scaffold(
         // appbar: appbar(
         //   leading: iconbutton(
@@ -113,20 +115,44 @@ class Completion extends StatelessWidget {
   }
 }
 
-class AddTask extends StatelessWidget {
+class AddTask extends StatefulWidget {
   AddTask({super.key});
 
+  @override
+  State<AddTask> createState() => _AddTaskState();
+}
+
+class _AddTaskState extends State<AddTask> {
+  late FToast fToast;
   final TextEditingController _textEditingController = TextEditingController();
 
-  submit(TextEditingController todo, BuildContext context){
-    if (todo.text.trim().isNotEmpty) {
+  @override
+  void initState() {
+    super.initState();
+    fToast = FToast();
+    fToast.init(context);
+  }
+
+  submit(TextEditingController todo, BuildContext context) {
+    if (todo.text.trim().length <= 100 && todo.text.trim().isNotEmpty) {
       final newTask = Task()
         ..todo = todo.text.trim()
         ..isChecked = false;
       context.read<TaskProvider>().addAndUpdateTask(newTask);
       todo.clear();
     } else {
-      print("Nice try Amigo.");
+        fToast.showToast(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            decoration: BoxDecoration(
+              color: LightMode.accent1,
+              borderRadius: BorderRadius.circular(25)
+            ),
+            child: Text("Empty or more than 100 characters", style: TextStyle(color: Colors.white),),
+          ),
+          gravity: ToastGravity.BOTTOM,
+          toastDuration: Duration(seconds: 3),
+        );
     }
   }
 
@@ -198,9 +224,7 @@ class TodoItem extends StatelessWidget {
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),
-        constraints: BoxConstraints(
-          minHeight: sch * 0.07,
-        ),
+        constraints: BoxConstraints(minHeight: sch * 0.07),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -220,16 +244,19 @@ class TodoItem extends StatelessWidget {
                       context.read<TaskProvider>().addAndUpdateTask(task);
                     },
                   ),
-                  Expanded(child: Text(task.todo, softWrap: true,),),
+                  Expanded(child: Text(task.todo, softWrap: true)),
                 ],
               ),
             ),
             Row(
               children: [
-                IconButton(onPressed: () {
-                  task.todo = "Updated";
-                  context.read<TaskProvider>().addAndUpdateTask(task);
-                }, icon: Icon(Icons.edit)),
+                IconButton(
+                  onPressed: () {
+                    task.todo = "Updated";
+                    context.read<TaskProvider>().addAndUpdateTask(task);
+                  },
+                  icon: Icon(Icons.edit),
+                ),
                 IconButton(
                   onPressed: () {
                     context.read<TaskProvider>().deleteTask(task);
