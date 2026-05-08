@@ -34,9 +34,7 @@ class _MainAppState extends State<MainApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(),
-      ),
+      theme: ThemeData(textTheme: GoogleFonts.spaceGroteskTextTheme()),
       debugShowCheckedModeBanner: false,
       builder: FToastBuilder(),
       home: Scaffold(
@@ -95,7 +93,10 @@ class Completion extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text("Todo's Done"),
+          Text(
+            "Todo's Done",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
+          ),
           Container(
             width: 0.14 * sch,
             height: 0.14 * sch,
@@ -111,8 +112,8 @@ class Completion extends StatelessWidget {
                   key: UniqueKey(),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 50,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
@@ -248,19 +249,35 @@ class TodoItem extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Checkbox(
-                    checkColor: Colors.green,
-                    value: task.isChecked,
-                    onChanged: (bool? value) {
-                      task.isChecked = value ?? false;
+                  GestureDetector(
+                    onTap: () {
+                      task.isChecked = !task.isChecked;
                       context.read<TaskProvider>().addAndUpdateTask(task);
                     },
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 200),
+                      margin: EdgeInsets.all(10),
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        color: task.isChecked
+                            ? LightMode.accent1
+                            : Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: task.isChecked
+                              ? Colors.transparent
+                              : LightMode.accent1,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
                   ),
                   Expanded(
                     child: AnimatedDefaultTextStyle(
                       style: TextStyle(
                         fontSize: 19,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         color: Colors.black,
                         decoration: task.isChecked
                             ? TextDecoration.lineThrough
