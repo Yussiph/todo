@@ -4,11 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/Themes.dart';
-
 import 'package:todo/collections/Task.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:isar_community/isar.dart';
-
 import 'package:todo/services/isar_setup.dart';
 import 'package:todo/repositories/task_provider.dart';
 
@@ -126,7 +124,7 @@ class Completion extends StatelessWidget {
 }
 
 class AddTask extends StatefulWidget {
-  AddTask({super.key});
+  const AddTask({super.key});
 
   @override
   State<AddTask> createState() => _AddTaskState();
@@ -205,7 +203,6 @@ class _AddTaskState extends State<AddTask> {
               ),
             ),
           ),
-
           Container(
             margin: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
@@ -227,7 +224,7 @@ class _AddTaskState extends State<AddTask> {
 
 class TodoItem extends StatelessWidget {
   final Task task;
-  TodoItem({super.key, required this.task});
+  const TodoItem({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +312,7 @@ class TodoItem extends StatelessWidget {
 }
 
 class TodosList extends StatelessWidget {
-  TodosList({super.key});
+  const TodosList({super.key});
 
   @override
   Widget build(BuildContext context) {
